@@ -1,0 +1,19 @@
+{
+  "name": "mkrest",
+  "version": "1.0.0",
+  "description": "rest back-end for mkalex based on node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mk",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.3.0",
+    "koa-body": "^2.1.0",
+    "koa-logger": "^3.0.0",
+    "koa-router": "^7.2.1",
+    "koa-static": "^3.0.0",
+    "mysql": "^2.13.0"
+  }
+}
