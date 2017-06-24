@@ -2,6 +2,8 @@ const Article       = require('../models/article.js');
 // const castBoolean  = require('./cast-boolean.js');
 
 
+const cast  = require('../cast.js');
+
 class ArticlesHandlers {
 
     static async getArticles(ctx) {
@@ -15,9 +17,9 @@ class ArticlesHandlers {
             }
             // sql +=  ' Order By publish_time';
 
-            let result = await ctx.state.db.query(sql, ctx.query);
-            // const [members] = castBoolean.fromMysql(result);
-            console.log(result);
+            const result = await ctx.state.db.query(sql, ctx.query);
+            const [articles] = cast.fromMysql(result);
+            console.log(articles);
             
             // No Content (preferred to returning 200 with empty list)
             if (articles.length == 0) { ctx.status = 204; return; }
