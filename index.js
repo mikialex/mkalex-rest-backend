@@ -27,21 +27,12 @@ global.connectionPool = mysql.createPool(config); // put in global to pass to su
 debug.logblue('connectionPool created\n')
 
 
-// log the request info
-app.use(async function(ctx, next) {
-  // console.log(ctx);
-  console.log(ctx.method + ' ' + ctx.url);
-  await next();
-});
+//-----------------for different middlewares----------------------------
+app.use(require('./middlewares/request-consolelog.js').middleware)
+app.use(require('./middlewares/response-time.js').middleware)
 
+//------------------------------------------------------------------
 
-// return response time in X-Response-Time header
-app.use(async function responseTime(ctx, next) {
-  const t1 = Date.now();
-  await next();
-  const t2 = Date.now();
-  ctx.set('X-Response-Time', Math.ceil(t2 - t1) + 'ms');
-});
 
 
 // set up MySQL connection
@@ -69,12 +60,9 @@ app.use(async function mysqlConnection(ctx, next) {
 
 
 //-----------------for different routes----------------------------
-
 app.use(require('./routers/routes-article.js'));
 app.use(require('./routers/routes-category.js'));
 app.use(require('./routers/routes-tag.js'));
-
-
 
 //------------------------------------------------------------------
 
