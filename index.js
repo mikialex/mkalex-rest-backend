@@ -4,7 +4,7 @@ console.log(databaseInfo.password)
 
 const Koa = require('koa');
 const app = module.exports = new Koa();
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 // MySQL connection pool (set up on app initialisation)
 const config = {
@@ -36,26 +36,26 @@ app.use(async function responseTime(ctx, next) {
 
 // set up MySQL connection
 app.use(async function mysqlConnection(ctx, next) {
-  try {
-    // keep copy of ctx.state.db in global for access from models
-     global.connectionPool.getConnection(
-        async (err, connection) => {
-            ctx.state.db = global.db=connection
-            await next();
-            ctx.state.db.release();
-      }
-    );
-    // ctx.state.db.connection.config.namedPlaceholders = true;
-    // traditional mode ensures not null is respected for unsupplied fields, ensures valid JavaScript dates, etc
-    // await ctx.state.db.query('SET SESSION sql_mode = "TRADITIONAL"');
+    try {
 
-  } catch (e) {
-    // note if getConnection() fails we have no this.state.db, but if anything downstream throws,
-    // we need to release the connection
-    if (ctx.state.db) ctx.state.db.release();
-    throw e;
-  }
+        // keep copy of ctx.state.db in global for access from models
+        ctx.state.db = global.db = await global.connectionPool.getConnection();
+        // ctx.state.db.connection.config.namedPlaceholders = true;
+        // traditional mode ensures not null is respected for unsupplied fields, ensures valid JavaScript dates, etc
+        // await ctx.state.db.query('SET SESSION sql_mode = "TRADITIONAL"');
+
+        await next();
+
+        ctx.state.db.release();
+
+    } catch (e) {
+        // note if getConnection() fails we have no this.state.db, but if anything downstream throws,
+        // we need to release the connection
+        if (ctx.state.db) ctx.state.db.release();
+        throw e;
+    }
 });
+
 
 app.use(require('./routers/routes-article.js'));
 

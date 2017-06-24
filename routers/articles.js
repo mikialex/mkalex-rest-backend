@@ -15,9 +15,8 @@ class ArticlesHandlers {
             }
             // sql +=  ' Order By publish_time';
 
-            const result = await ctx.state.db.query(sql, ctx.query);
+            let result = await ctx.state.db.query(sql, ctx.query);
             // const [members] = castBoolean.fromMysql(result);
-            const articles = result;
             console.log(result);
             
             // No Content (preferred to returning 200 with empty list)
