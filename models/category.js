@@ -1,0 +1,9 @@
+class Category{
+  static getCategoryList() {
+    
+  }
+  
+  
+
+
+}

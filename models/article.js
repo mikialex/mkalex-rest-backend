@@ -1,18 +1,21 @@
+const cast = require('../utils/cast.js');
+
 class Article {
 
 
-  static async get(id) {
-    const [members] = await global.db.query('Select * From Member Where MemberId = :id', {
+  static async getDetialById(id) {
+    const result = await global.db.query('Select * From webPage_article Where id = :id', {
       id
     });
-    const member = members[0];
-    return member;
+    let [articles] = cast.fromMysql(result);
+    const article = articles[0];
+    return article;
   }
 
 
   // static async getBy(field, value) {
   //   try {
-      
+
   //     const sql = `Select * From Member Where ${field} = :${field} Order By Firstname, Lastname`;
 
   //     const [members] = await global.db.query(sql, {
@@ -33,7 +36,7 @@ class Article {
   // }
 
 
- 
+
   // static async insert(values) {
   //   // validation - somewhat artificial example serves to illustrate principle
   //   if (values.Firstname == null && values.Lastname == null) {

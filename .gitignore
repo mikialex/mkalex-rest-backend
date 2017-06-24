@@ -2,4 +2,4 @@ example
 koa-musql-demo
 node_modules
 
-database-info.js
+configs/database-info.js
