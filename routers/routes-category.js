@@ -1,9 +1,10 @@
 const router = require('koa-router')();
 
-const articles = require('../controller/articles.js');
+const category = require('../controllers/categories.js');
 
 
-router.get('/category',articles.getArticleList);  
+router.get('/category', category.getAllCategory);  //All categories
+
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
