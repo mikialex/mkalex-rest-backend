@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const app = module.exports = new Koa();
 const mysql = require('mysql2/promise');
+const compress = require('koa-compress');
 
 const databaseInfo = require('./configs/database-info.js');
 const debug = require('./utils/debugger.js');
@@ -30,7 +31,11 @@ debug.logblue('connectionPool created\n')
 //-----------------for different middlewares----------------------------
 app.use(require('./middlewares/request-consolelog.js').middleware)
 app.use(require('./middlewares/response-time.js').middleware)
-
+app.use(async (ctx, next) => {
+  await next();
+  ctx.set('Access-Control-Allow-Origin', '*');
+})
+app.use(compress({}))
 //------------------------------------------------------------------
 
 
