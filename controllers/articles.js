@@ -6,24 +6,24 @@ class ArticlesHandlers {
   static async getArticleList(ctx) {
     try {
       console.log(ctx.query)
-      let sql = 'Select * From webPage_article';
-      if (ctx.querystring) {
-        const filter = Object.keys(ctx.query).map(function(q) {
-          return q + ' = :' + q;
-        }).join(' and ');
-        sql += ' Where ' + filter;
-      }
-      sql += ' Order By publish_time';
+      let sql = 'Select * From article';
+      // if (ctx.querystring) {
+      //   const filter = Object.keys(ctx.query).map(function(q) {
+      //     return q + ' = :' + q;
+      //   }).join(' and ');
+      //   sql += ' Where ' + filter;
+      // }
+      sql += ' Order By create_time Desc';
       const result = await ctx.state.db.query(sql, ctx.query);
       let [articles] = cast.fromMysql(result);
       articles = articles.map((article) => {
         return {
-          urlname: article.url_name,
+          urlname: article.u_name,
           title: article.title,
           sub_title: article.sub_title,
-          page_view: article.page_view,
+          page_view: article.visit,
           has_cover: article.has_cover,
-          publish_time: article.publish_time,
+          publish_time: article.create_time,
         }
       })
 
@@ -46,10 +46,10 @@ class ArticlesHandlers {
     }
   }
 
+  
   static async getArticleDetial(ctx) {
     try {
-
-      let article = await Article.getDetialById(ctx.params.id)
+      let article = await Article.getDetailByUrlname(ctx.query.urlname)
 
       if (!article) ctx.throw(404, `Not found`); // Not Found
 

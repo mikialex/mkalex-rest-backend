@@ -3,9 +3,18 @@ const cast = require('../utils/cast.js');
 class Article {
 
 
-  static async getDetialById(id) {
-    const result = await global.db.query('Select * From webPage_article Where id = :id', {
-      id
+  // static async getDetialById(id) {
+  //   const result = await global.db.query('Select * From webPage_article Where id = :id', {
+  //     id
+  //   });
+  //   let [articles] = cast.fromMysql(result);
+  //   const article = articles[0];
+  //   return article;
+  // }
+
+   static async getDetailByUrlname(urlname) {
+    const result = await global.db.query('Select * From article Where u_name = :urlname', {
+      urlname
     });
     let [articles] = cast.fromMysql(result);
     const article = articles[0];
