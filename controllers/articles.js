@@ -5,65 +5,70 @@ class ArticlesHandlers {
 
   static async getArticleList(ctx) {
     try {
-      console.log(ctx.query)
-      let sql = 'Select * From article';
+      let sql =
+        `SELECT u_name,title,sub_title,visit,has_cover,create_time
+        FROM article left join article_with_tag
+        on article.u_name =article_with_tag.article
+        where article.usefor='article'
+        Order By create_time Desc`;
+      
+      // //for paging
       // if (ctx.querystring) {
       //   const filter = Object.keys(ctx.query).map(function(q) {
       //     return q + ' = :' + q;
       //   }).join(' and ');
       //   sql += ' Where ' + filter;
       // }
-      sql += ' Order By create_time Desc';
+      
       const result = await ctx.state.db.query(sql, ctx.query);
-      let [articles] = cast.fromMysql(result);
-      articles = articles.map((article) => {
-        return {
-          urlname: article.u_name,
-          title: article.title,
-          sub_title: article.sub_title,
-          page_view: article.visit,
-          has_cover: article.has_cover,
-          publish_time: article.create_time,
-        }
-      })
+      let [rawResult] = cast.fromMysql(result);
 
-      // No Content (preferred to returning 200 with empty list)
-      if (articles.length == 0) {
-        ctx.status = 204;
-        return;
+      let articles = [];
+
+      function hasArticle(name) {
+        let find = -1;
+        articles.forEach((article, index) => {
+          if (article.urlname === name) {
+            find=index;
+          }
+        })
+        return find;
       }
 
+      rawResult.forEach(item => {
+        let idx = hasArticle(item.u_name)
+        if (idx !== -1) {
+          if (item.tag !== null) {
+            articles[idx].tags.push(item.tag)
+          }
+        } else {
+          articles.push({
+            urlname: item.u_name,
+            title: item.title,
+            sub_title: item.sub_title,
+            page_view: item.visit,
+            has_cover: item.has_cover,
+            publish_time: item.create_time,
+            tags:item.tag?[item.tag]:[]
+          })
+        }
+      });
       ctx.body = articles;
 
-    } catch (e) {
-      switch (e.code) {
-        case 'ER_BAD_FIELD_ERROR':
-          ctx.throw(403, 'Unrecognised Member field');
-          break;
-        default:
-          throw e;
-      }
-    }
+    } catch (e) {}
   }
 
   
   static async getArticleDetial(ctx) {
     try {
       let article = await Article.getDetailByUrlname(ctx.query.urlname)
+      await Article.addVisit(ctx.query.urlname)
 
       if (!article) ctx.throw(404, `Not found`); // Not Found
 
       ctx.body = article;
 
-    } catch (e) {
-      switch (e.code) {
-        case 'ER_BAD_FIELD_ERROR':
-          ctx.throw(403, 'Unrecognised Member field');
-          break;
-        default:
-          throw e;
-      }
-    }
+    } catch (e) {}
   }
 
 

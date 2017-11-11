@@ -66,7 +66,7 @@ app.use(async function mysqlConnection(ctx, next) {
 
 //-----------------for different routes----------------------------
 app.use(require('./routers/routes-article.js'));
-app.use(require('./routers/routes-tag.js'));
+// app.use(require('./routers/routes-tag.js'));
 
 //------------------------------------------------------------------
 
