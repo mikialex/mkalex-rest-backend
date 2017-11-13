@@ -1,8 +1,10 @@
 const Koa = require('koa');
+const bodyParser = require('koa-bodyparser');
 const app = module.exports = new Koa();
 const mysql = require('mysql2/promise');
 const compress = require('koa-compress');
 
+const cast = require('./utils/cast.js');
 const databaseInfo = require('./configs/database-info.js');
 const debug = require('./utils/debugger.js');
 const chalk = require('chalk');
@@ -29,11 +31,15 @@ debug.logblue('connectionPool created\n')
 
 
 //-----------------for different middlewares----------------------------
+app.use(bodyParser());
 app.use(require('./middlewares/request-consolelog.js').middleware)
 app.use(require('./middlewares/response-time.js').middleware)
 app.use(async (ctx, next) => {
   await next();
   ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
 })
 app.use(compress({}))
 //------------------------------------------------------------------
@@ -46,6 +52,12 @@ app.use(async function mysqlConnection(ctx, next) {
 
     // keep copy of ctx.state.db in global for access from models
     ctx.state.db = global.db = await global.connectionPool.getConnection();
+
+    global.db.q = async function (sql, params) {
+      const [datas] = cast.fromMysql(await global.db.query(sql, params));
+      return datas
+    }
+
     ctx.state.db.connection.config.namedPlaceholders = true;
     // traditional mode ensures not null is respected for unsupplied fields, ensures valid JavaScript dates, etc
     // await ctx.state.db.query('SET SESSION sql_mode = "TRADITIONAL"');
@@ -65,6 +77,7 @@ app.use(async function mysqlConnection(ctx, next) {
 
 
 //-----------------for different routes----------------------------
+app.use(require('./routers/routes-auth.js'));
 app.use(require('./routers/routes-article.js'));
 // app.use(require('./routers/routes-tag.js'));
 
