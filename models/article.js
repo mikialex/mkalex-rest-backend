@@ -40,6 +40,7 @@ class Article {
             page_view: item.visit,
             has_cover: item.has_cover,
             publish_time: item.create_time,
+            is_recommended: item.is_recommended,
             tags: [item.tag]
           })
         } else {
@@ -50,6 +51,7 @@ class Article {
             page_view: item.visit,
             has_cover: item.has_cover,
             publish_time: item.create_time,
+            is_recommended: item.is_recommended,
             tags: []
           })
         }
@@ -59,21 +61,39 @@ class Article {
   }
 
 
-  static async getDetailByUrlname(urlname) {
-    const result = await global.db.query('Select content From article Where u_name = :urlname', {
+  static async getArticleContentByUrlname(urlname) {
+    const articles = await global.db.q('Select content From article Where u_name = :urlname', {
       urlname
     });
-    let [articles] = cast.fromMysql(result);
-    const article = articles[0];
-    return article;
+    return articles[0];
   }
 
-  static async getTagsByUrlname(urlname) {
-    const result = await global.db.query('Select tag From article_with_tag Where article = :urlname', {
-      urlname
-    });
-    let [tags] = cast.fromMysql(result);
-    return tags;
+  static async getArticleDetialByUrlName(urlname) {
+    let sql =
+      `SELECT * FROM article left join article_with_tag
+    on article.u_name =article_with_tag.article
+    where article.usefor='article'
+    and article.u_name=:urlname`;
+
+    const articles = await global.db.q(sql, { urlname });
+    let tags = [];
+    articles.forEach(article => {
+      tags.push(article.tag);
+    })
+    let article = articles[0];
+    if (article) {
+      return {
+        urlname: article.u_name,
+        title: article.title,
+        sub_title: article.sub_title,
+        page_view: article.visit,
+        has_cover: article.has_cover,
+        publish_time: article.create_time,
+        content: article.content,
+        is_recommended: article.is_recommended,
+        tags: tags
+      };
+    }
   }
 
   static async addVisit(urlname) {
@@ -84,6 +104,52 @@ class Article {
     await global.db.query('update article set visit = :newvisit where u_name=:urlname', { urlname, newvisit })
   }
 
+
+  static async addArticle(newArticleDetial) {
+    console.log(newArticleDetial)
+    let sql =
+      `
+      INSERT INTO article 
+      (u_name,title,sub_title,visit,has_cover,create_time,is_recommended,content)
+      VALUES 
+      (:urlname,:title,:sub_title,:visit,:has_cover,:create_time,:is_recommended,content)
+      `
+    await global.db.query(sql, newArticleDetial)
+  }
+
+  static async updateArticleDetial(newArticleDetial) {
+    let sql =
+      `
+    UPDATE article 
+    SET content=:content ,u_name=:urlname ,
+    title=:title, sub_title=:sub_title, visit=:visit, has_cover=:has_cover,
+    create_time=:create_time, is_recommended=:is_recommended
+    WHERE u_name=:urlname
+
+    `
+    await global.db.query(sql, newArticleDetial)
+  }
+
+  static async isExistSameUrlname(urlname) {
+    let sql =
+      `
+    select u_name from article where u_name=:urlname
+    `
+    let ret = await global.db.q(sql, { urlname })
+    if (ret.length !== 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  static async deleteArticle(urlname) {
+    let sql =
+      `
+      delete from article where u_name=:urlname
+      `
+    let ret = await global.db.query(sql, { urlname })
+  }
 
 }
 
