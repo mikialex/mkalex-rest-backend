@@ -21,13 +21,25 @@ class Auth {
 
   }
 
-  static async CheckToken(ctx) {
-    
+  static async CheckToken(token) {
+    return true;
+  }
+
+  static async needAuthToken(ctx, next) {
+    console.log('check token')
+    const token = ctx.request.body.params.token;
+    if (await Auth.CheckToken(token)) {
+      console.log('next')
+      await next();
+    } else {
+      ctx.body={result:'authfail'}
+    }
   }
 
   static async preflight(ctx) {
     ctx.status = 200;
   }
+
 
 }
 

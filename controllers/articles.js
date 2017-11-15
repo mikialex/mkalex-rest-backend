@@ -1,11 +1,8 @@
 const Article = require('../models/article.js');
-const cast = require('../utils/cast.js');
+const Auth = require('./auth.js');
 
 class ArticlesHandlers {
 
-  static async preflight(ctx) {
-    ctx.status = 200;
-  }
 
   static async getArticleList(ctx) {
     ctx.body = await Article.getArticleList();
@@ -29,7 +26,7 @@ class ArticlesHandlers {
   static async updateArticleDetial(ctx) {
     try {
       await Article.updateArticleDetial(ctx.request.body.params);
-      ctx.body={result:'succcess'}
+      ctx.body={result:'success'}
     } catch (error) {
       ctx.body={result:'error',message:error}
     }
@@ -38,7 +35,7 @@ class ArticlesHandlers {
   static async updateArticleDetial(ctx) {
     try {
       await Article.updateArticleDetial(ctx.request.body.params);
-      ctx.body={result:'succcess'}
+      ctx.body={result:'success'}
     } catch (error) {
       ctx.body={result:'error',message:error}
     }

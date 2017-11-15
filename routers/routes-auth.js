@@ -10,4 +10,4 @@ router.options( '/login', auth.preflight);       // list articles
 // router.patch( '/members/:id', members.patchMemberById);  // update member details
 // router.delete('/members/:id', members.deleteMemberById); // delete member
 
-module.exports = router.middleware();
+module.exports = router;

@@ -81,6 +81,7 @@ class Article {
       tags.push(article.tag);
     })
     let article = articles[0];
+    console.log(article)
     if (article) {
       return {
         urlname: article.u_name,
@@ -112,7 +113,7 @@ class Article {
       INSERT INTO article 
       (u_name,title,sub_title,visit,has_cover,create_time,is_recommended,content)
       VALUES 
-      (:urlname,:title,:sub_title,:visit,:has_cover,:create_time,:is_recommended,content)
+      (:urlname,:title,:sub_title,:visit,:has_cover,:create_time,:is_recommended,:content)
       `
     await global.db.query(sql, newArticleDetial)
   }

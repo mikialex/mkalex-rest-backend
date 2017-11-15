@@ -45,7 +45,6 @@ app.use(compress({}))
 //------------------------------------------------------------------
 
 
-
 // set up MySQL connection
 app.use(async function mysqlConnection(ctx, next) {
   try {
@@ -77,8 +76,13 @@ app.use(async function mysqlConnection(ctx, next) {
 
 
 //-----------------for different routes----------------------------
-app.use(require('./routers/routes-auth.js'));
-app.use(require('./routers/routes-article.js'));
+const authRouter=require('./routers/routes-auth.js')
+const articleRouter = require('./routers/routes-article.js')
+
+app.use(authRouter.routes())
+  .use(authRouter.allowedMethods());
+app.use(articleRouter.routes())
+  .use(articleRouter.allowedMethods());
 // app.use(require('./routers/routes-tag.js'));
 
 //------------------------------------------------------------------
