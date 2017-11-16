@@ -22,7 +22,7 @@ class Auth {
   }
 
   static async CheckToken(token) {
-    return true;
+    return await User.checkUserToken(token).length !== 0
   }
 
   static async needAuthToken(ctx, next) {
@@ -35,11 +35,6 @@ class Auth {
       ctx.body={result:'authfail'}
     }
   }
-
-  static async preflight(ctx) {
-    ctx.status = 200;
-  }
-
 
 }
 
