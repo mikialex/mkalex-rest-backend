@@ -81,7 +81,7 @@ class Article {
       tags.push(article.tag);
     })
     let article = articles[0];
-    console.log(article)
+    // console.log(article)
     if (article) {
       return {
         urlname: article.u_name,

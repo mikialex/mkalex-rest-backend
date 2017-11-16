@@ -13,7 +13,7 @@ class User {
   }
 
   static async checkUserToken(token) {
-    await global.db.q(
+    return await global.db.q(
      `Select username From user Where token = :token`
      , { token })
  }

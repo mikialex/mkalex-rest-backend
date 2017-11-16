@@ -5,6 +5,7 @@ class ArticlesHandlers {
 
 
   static async getArticleList(ctx) {
+    // console.log(typeof await Article.getArticleList() )
     ctx.body = await Article.getArticleList();
   }
 
@@ -19,7 +20,6 @@ class ArticlesHandlers {
   }
 
   static async getArticleDetial(ctx) {
-    console.log(ctx.query)
     ctx.body = await Article.getArticleDetialByUrlName(ctx.query.urlname)
   }
 

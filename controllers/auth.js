@@ -15,14 +15,14 @@ class Auth {
       } else {
         ctx.body = { result:'wrong',message: 'auth fail' };
       }
-    } else {
+    } else { 
       ctx.body = { result:'wrong',message: 'auth fail' };
     }
 
   }
 
   static async CheckToken(token) {
-    return await User.checkUserToken(token).length !== 0
+    return (await User.checkUserToken(token)).length !== 0
   }
 
   static async needAuthToken(ctx, next) {
@@ -32,7 +32,7 @@ class Auth {
       console.log('next')
       await next();
     } else {
-      ctx.body={result:'authfail'}
+      ctx.body={result:'authfail'} 
     }
   }
 

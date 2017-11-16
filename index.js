@@ -53,8 +53,7 @@ app.use(async function mysqlConnection(ctx, next) {
     ctx.state.db = global.db = await global.connectionPool.getConnection();
 
     global.db.q = async function (sql, params) {
-      const [datas] = cast.fromMysql(await global.db.query(sql, params));
-      return datas
+      return cast.fromMysql(await global.db.query(sql, params));
     }
 
     ctx.state.db.connection.config.namedPlaceholders = true;
