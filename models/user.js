@@ -12,6 +12,12 @@ class User {
       , { token,username })
   }
 
+  static async checkUserToken(token) {
+    await global.db.q(
+     `Select username From user Where token = :token`
+     , { token })
+ }
+
 }
 
 module.exports = User;
