@@ -19,9 +19,24 @@ class ArticlesHandlers {
     ctx.body = article;
   }
 
+  static async getAricleTagList(ctx) {
+    ctx.body = await Article.getAricleTagList(ctx.query.urlname);
+  }
+
   static async getArticleDetial(ctx) {
     ctx.body = await Article.getArticleDetialByUrlName(ctx.query.urlname)
   }
+
+  static async addTag(ctx) {
+    await Article.addTag(ctx.request.body.urlname, ctx.request.body.tagname)
+    ctx.body={result:'success'}
+  }
+
+  static async removeTag(ctx) {
+    await Article.removeTag(ctx.query.urlname,ctx.query.tagname)
+    ctx.body={result:'success'}
+  }
+
 
   static async updateArticleDetial(ctx) {
     try {

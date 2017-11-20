@@ -21,20 +21,37 @@ class Auth {
 
   }
 
-  static async CheckToken(token) {
-    return (await User.checkUserToken(token)).length !== 0
-  }
-
-  static async needAuthToken(ctx, next) {
-    console.log('check token')
-    const token = ctx.request.body.params.token;
-    if (await Auth.CheckToken(token)) {
-      console.log('next')
-      await next();
+  static async CheckToken(ctx) {
+    let token='';
+    if (ctx.method === 'POST') {
+      token = ctx.request.body.token;
+    } else if (ctx.method === 'DELETE') {
+      token = ctx.query.token;
+    }
+    else {
+      token = ctx.request.body.params.token;
+    }
+    console.log(token)
+    if (token) {
+      return (await User.checkUserToken(token)).length !== 0
     } else {
-      ctx.body={result:'authfail'} 
+      return false
     }
   }
+
+  static tokenChecker(handler) {
+    return async function (ctx) {
+      if (await Auth.CheckToken(ctx)) {
+        console.log('token check passed')
+        await handler(ctx)
+      } else {
+        console.log('token check failed')
+        ctx.body={result:'authfail'} 
+      }
+    } 
+  }
+   
+
 
 }
 

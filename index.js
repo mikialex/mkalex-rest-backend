@@ -77,11 +77,14 @@ app.use(async function mysqlConnection(ctx, next) {
 //-----------------for different routes----------------------------
 const authRouter=require('./routers/routes-auth.js')
 const articleRouter = require('./routers/routes-article.js')
+const tagRouter = require('./routers/routes-tag.js') 
 
 app.use(authRouter.routes())
   .use(authRouter.allowedMethods());
 app.use(articleRouter.routes())
   .use(articleRouter.allowedMethods());
+  app.use(tagRouter.routes())
+    .use(tagRouter.allowedMethods());
 // app.use(require('./routers/routes-tag.js'));
 
 //------------------------------------------------------------------

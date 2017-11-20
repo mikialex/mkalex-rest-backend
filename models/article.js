@@ -78,7 +78,9 @@ class Article {
     const articles = await global.db.q(sql, { urlname });
     let tags = [];
     articles.forEach(article => {
-      tags.push(article.tag);
+      if (article.tag !== null) {
+        tags.push(article.tag);
+      }
     })
     let article = articles[0];
     // console.log(article)
@@ -97,12 +99,47 @@ class Article {
     }
   }
 
+  static async getAricleTagList(urlname) {
+    let list = await global.db.q('Select tag From article_with_tag Where article = :urlname', { urlname })
+    return list
+  }
+
+  static async addTag(urlname,tagname) {
+    await global.db.query('insert into article_with_tag (article,tag) values (:urlname,:tagname)', { urlname, tagname });
+  }
+
+  static async removeTag(urlname,tagname) {
+    await global.db.query('delete From article_with_tag Where article = :urlname and tag=:tagname', { urlname, tagname });
+  }
+
+
+
   static async addVisit(urlname) {
-    let old = await global.db.query('Select visit From article Where u_name = :urlname', { urlname })
-    let [oldvisit] = cast.fromMysql(old);
-    console.log(oldvisit[0].visit)    //to fix
+    let oldvisit = await global.db.q('Select visit From article Where u_name = :urlname', { urlname })
+    console.log(oldvisit)    //to fix
     let newvisit = oldvisit[0].visit + 1;
     await global.db.query('update article set visit = :newvisit where u_name=:urlname', { urlname, newvisit })
+  }
+
+  static async addTag(urlname, tag) {
+    let tagExist = await global.db.q('Select article From article_with_tag Where tag = :tag and article=:urlname', {urlname, tag })
+
+    console.log(tagExist)    //to fix
+    if (tagExist.length===0) {
+      let sql=
+      `
+      INSERT INTO article_with_tag
+      (id,article,tag)
+      VALUES 
+      (null,:urlname,:tag)
+      `
+      await global.db.query(sql, { urlname, tag })
+    }
+
+  }
+
+  static async removeTag(urlname,tag) {
+    await global.db.query('delete from article_with_tag where article=:urlname and tag=:tag', { urlname, tag })
   }
 
 
@@ -119,6 +156,7 @@ class Article {
   }
 
   static async updateArticleDetial(newArticleDetial) {
+    // console.log(newArticleDetial)
     let sql =
       `
     UPDATE article 
