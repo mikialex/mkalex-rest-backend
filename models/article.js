@@ -2,12 +2,15 @@ const cast = require('../utils/cast.js');
 
 class Article {
 
+  static timeCast(time) {
+    return time.toISOString().substring(0,10)
+  }
+
   static async getArticleList() {
     let sql =
-      `SELECT u_name,title,sub_title,visit,has_cover,create_time,tag
+      `SELECT *
       FROM article left join article_with_tag
       on article.u_name =article_with_tag.article
-      where article.usefor='article'
       Order By create_time Desc`;
 
     const rawResult = await global.db.q(sql);
@@ -39,8 +42,9 @@ class Article {
             sub_title: item.sub_title,
             page_view: item.visit,
             has_cover: item.has_cover,
-            publish_time: item.create_time,
+            publish_time: Article.timeCast(item.create_time),
             is_recommended: item.is_recommended,
+            usefor:item.usefor,
             tags: [item.tag]
           })
         } else {
@@ -50,8 +54,9 @@ class Article {
             sub_title: item.sub_title,
             page_view: item.visit,
             has_cover: item.has_cover,
-            publish_time: item.create_time,
+            publish_time:  Article.timeCast(item.create_time),
             is_recommended: item.is_recommended,
+            usefor:item.usefor,
             tags: []
           })
         }
@@ -72,8 +77,7 @@ class Article {
     let sql =
       `SELECT * FROM article left join article_with_tag
     on article.u_name =article_with_tag.article
-    where article.usefor='article'
-    and article.u_name=:urlname`;
+    where article.u_name=:urlname`;
 
     const articles = await global.db.q(sql, { urlname });
     let tags = [];
@@ -83,7 +87,6 @@ class Article {
       }
     })
     let article = articles[0];
-    // console.log(article)
     if (article) {
       return {
         urlname: article.u_name,
@@ -91,9 +94,10 @@ class Article {
         sub_title: article.sub_title,
         page_view: article.visit,
         has_cover: article.has_cover,
-        publish_time: article.create_time,
+        publish_time:  Article.timeCast(article.create_time),
         content: article.content,
         is_recommended: article.is_recommended,
+        usefor:article.usefor,
         tags: tags
       };
     }
@@ -148,9 +152,9 @@ class Article {
     let sql =
       `
       INSERT INTO article 
-      (u_name,title,sub_title,visit,has_cover,create_time,is_recommended,content)
+      (u_name,title,sub_title,visit,has_cover,create_time,is_recommended,content,usefor)
       VALUES 
-      (:urlname,:title,:sub_title,:visit,:has_cover,:create_time,:is_recommended,:content)
+      (:urlname,:title,:sub_title,:visit,:has_cover,:create_time,:is_recommended,:content,:usefor)
       `
     await global.db.query(sql, newArticleDetial)
   }
@@ -160,7 +164,7 @@ class Article {
     let sql =
       `
     UPDATE article 
-    SET content=:content ,u_name=:urlname ,
+    SET content=:content ,u_name=:urlname ,usefor=:usefor ,
     title=:title, sub_title=:sub_title, visit=:visit, has_cover=:has_cover,
     create_time=:create_time, is_recommended=:is_recommended
     WHERE u_name=:urlname

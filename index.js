@@ -5,9 +5,21 @@ const mysql = require('mysql2/promise');
 const compress = require('koa-compress');
 
 const cast = require('./utils/cast.js');
-const databaseInfo = require('./configs/database-info.js');
 const debug = require('./utils/debugger.js');
 const chalk = require('chalk');
+
+let databaseInfo;
+var arguments = process.argv.splice(2);
+if (arguments[0] === 'dev') {
+   databaseInfo = require('./configs/database-info-dev.js');
+   console.log(chalk.bgBlue('use dev database \n'))
+} else {
+   databaseInfo = require('./configs/database-info-prod.js');
+   console.log(chalk.bgBlue('use online database \n'))
+}
+
+
+
 
 console.log(chalk.bgBlue('starting mkalex-rest backend \n'))
 debug.logblue('------database info loaded-----')
