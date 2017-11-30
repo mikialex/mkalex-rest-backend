@@ -2,4 +2,4 @@ example
 koademos
 node_modules
 
-configs/database-info.js
+configs/database-prod.js

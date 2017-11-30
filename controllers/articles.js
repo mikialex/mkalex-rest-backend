@@ -5,10 +5,12 @@ class ArticlesHandlers {
 
 
   static async getArticleList(ctx) {
-    // console.log(typeof await Article.getArticleList() )
     ctx.body = await Article.getArticleList();
   }
 
+  static async getArticleListAdmin(ctx) {
+    ctx.body = await Article.getArticleListAdmin();
+  }
 
   static async getArticleContent(ctx) {
     let article = await Article.getArticleContentByUrlname(ctx.query.urlname)
@@ -17,6 +19,12 @@ class ArticlesHandlers {
     if (!article) ctx.throw(404, `Not found`); // Not Found
 
     ctx.body = article;
+  }
+
+
+  static async getArticleDetialAdmin(ctx) {
+    // ctx.body = await Article.getArticleList();
+    
   }
 
   static async getAricleTagList(ctx) {

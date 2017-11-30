@@ -64,6 +64,10 @@ class Article {
     return articles;
   }
 
+  static async getArticleListAdmin() {
+    return [];
+  }
+
 
   static async getArticleContentByUrlname(urlname) {
     const articles = await global.db.q('Select content From article Where u_name = :urlname', {
@@ -100,6 +104,10 @@ class Article {
         tags: tags
       };
     }
+  }
+
+  static async getArticleContentByUrlname(urlname) {
+    
   }
 
   static async getAricleTagList(urlname) {

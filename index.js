@@ -11,10 +11,10 @@ const chalk = require('chalk');
 let databaseInfo;
 var arguments = process.argv.splice(2);
 if (arguments[0] === 'dev') {
-   databaseInfo = require('./configs/database-info-dev.js');
+   databaseInfo = require('./configs/database-dev.js');
    console.log(chalk.bgBlue('use dev database \n'))
 } else {
-   databaseInfo = require('./configs/database-info-prod.js');
+   databaseInfo = require('./configs/database-prod.js');
    console.log(chalk.bgBlue('use online database \n'))
 }
 
