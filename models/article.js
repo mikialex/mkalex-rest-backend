@@ -31,7 +31,6 @@ class Article {
       let idx = hasArticle(item.u_name)
       if (idx !== -1) {
         if (item.tag !== null) {
-          console.log(articles[idx])
           articles[idx].tags.push(item.tag)
         }
       } else {

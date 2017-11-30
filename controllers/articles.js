@@ -24,6 +24,7 @@ class ArticlesHandlers {
   }
 
   static async getArticleDetial(ctx) {
+    await Article.addVisit(ctx.query.urlname)
     ctx.body = await Article.getArticleDetialByUrlName(ctx.query.urlname)
   }
 
