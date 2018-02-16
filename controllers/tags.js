@@ -12,7 +12,7 @@ class TagHandler{
   }  
 
   static async addTag(ctx) {
-     await Tag.newTag(ctx.request.body.tagName);
+    await Tag.newTag(ctx.request.body.tagName);
      ctx.body={result:'success'}
   }  
 

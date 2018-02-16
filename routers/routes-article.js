@@ -14,11 +14,11 @@ ArticleRouter.get('/tags', articles.getAricleTagList);    // get article content
 ArticleRouter.post('/tag', auth.tokenChecker(articles.addTag));    // get article contents
 ArticleRouter.delete('/tag', auth.tokenChecker(articles.removeTag));    // get article contents
 
-ArticleRouter.get('/article', articles.getArticleDetial);     // get article details
-ArticleRouter.get('/article/admin',auth.tokenChecker(articles.getArticleDetialAdmin));     // get article details
+ArticleRouter.get('/article', articles.getArticleDetail);     // get article details
+ArticleRouter.get('/article/admin',auth.tokenChecker(articles.getArticleDetailAdmin));     // get article details
 
 
-ArticleRouter.patch(    '/article', auth.tokenChecker(articles.updateArticleDetial));    // change article details
+ArticleRouter.patch(    '/article', auth.tokenChecker(articles.updateArticleDetail));    // change article details
 ArticleRouter.post(     '/article', auth.tokenChecker(articles.addArticle));    // add article details
 ArticleRouter.delete(   '/article',  auth.tokenChecker(articles.deleteArticle));    // add article details
 

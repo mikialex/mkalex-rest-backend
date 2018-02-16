@@ -22,8 +22,13 @@ class ArticlesHandlers {
   }
 
 
-  static async getArticleDetialAdmin(ctx) {
-    // ctx.body = await Article.getArticleList();
+  static async getArticleDetailAdmin(ctx) {
+    let article = await Article.getArticleContentByUrlnameAdmin(ctx.query.urlname)
+    await Article.addVisit(ctx.query.urlname)
+
+    if (!article) ctx.throw(404, `Not found`); // Not Found
+
+    ctx.body = article;
     
   }
 
@@ -31,9 +36,9 @@ class ArticlesHandlers {
     ctx.body = await Article.getAricleTagList(ctx.query.urlname);
   }
 
-  static async getArticleDetial(ctx) {
+  static async getArticleDetail(ctx) {
     await Article.addVisit(ctx.query.urlname)
-    ctx.body = await Article.getArticleDetialByUrlName(ctx.query.urlname)
+    ctx.body = await Article.getArticleDetailByUrlName(ctx.query.urlname)
   }
 
   static async addTag(ctx) {
@@ -47,18 +52,9 @@ class ArticlesHandlers {
   }
 
 
-  static async updateArticleDetial(ctx) {
+  static async updateArticleDetail(ctx) {
     try {
-      await Article.updateArticleDetial(ctx.request.body.params);
-      ctx.body={result:'success'}
-    } catch (error) {
-      ctx.body={result:'error',message:error}
-    }
-  }
-
-  static async updateArticleDetial(ctx) {
-    try {
-      await Article.updateArticleDetial(ctx.request.body.params);
+      await Article.updateArticleDetail(ctx.query);
       ctx.body={result:'success'}
     } catch (error) {
       ctx.body={result:'error',message:error}
