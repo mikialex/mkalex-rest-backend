@@ -54,7 +54,7 @@ class ArticlesHandlers {
 
   static async updateArticleDetail(ctx) {
     try {
-      await Article.updateArticleDetail(ctx.query);
+      await Article.updateArticleDetail(ctx.request.body);
       ctx.body={result:'success'}
     } catch (error) {
       ctx.body={result:'error',message:error}

@@ -3,9 +3,11 @@ const cast = require('../utils/cast.js');
 const fs = require('fs');
 const { promisify } = require('util');
 const writeFile = promisify(fs.writeFile);
+const readFile = promisify(fs.readFile);
 const deleteFile = promisify(fs.unlink);
 
 const path = require('path');
+const sharp = require('sharp');
 
 class Image {
 
@@ -120,12 +122,24 @@ class Image {
 
   static async addImage(imageInfo) {
     console.log('imageInfo', imageInfo);
+    const imageBase = path.resolve(__dirname, '../static/image/') + '/';
+    const imagePath = imageBase + imageInfo.storage_name;
+    let realImageName = imageInfo.storage_name.split('.')[0];
+    let imageBuffer = await readFile(imagePath);
+    const imageMetaData = await sharp(imageBuffer).metadata();
     let sql =
       `
-      INSERT INTO image (storage_name, name,upload_time) 
-      VALUES (:storage_name, :name, :upload_time);
+      INSERT INTO image (storage_name, name,upload_time,width,height) 
+      VALUES (:storage_name, :name, :upload_time,:width,:height);
       `
-    await global.db.query(sql, imageInfo)
+    imageInfo.width = imageMetaData.width;
+    imageInfo.height = imageMetaData.height;
+    await global.db.query(sql, imageInfo);
+    await sharp(imageBuffer)
+      .resize(200, 200)
+      .max()
+      .toFile(imageBase + realImageName + '_overview' +'.jpg');
+
   }
 
   // static async updateArticleDetail(newArticleDetail) {
@@ -149,9 +163,9 @@ class Image {
       `
     let ret = await global.db.query(sql, conf)
     const basePath = path.resolve(__dirname, '../static/image/') + '/';
-    console.log(basePath);
-    const re = await deleteFile(basePath + conf.imagePathName);
-    console.log(re);
+    await deleteFile(basePath + conf.imagePathName);
+    let realImageName = conf.imagePathName.split('.')[0];
+    await deleteFile(basePath + realImageName + '_overview.jpg');
   }
 
 }

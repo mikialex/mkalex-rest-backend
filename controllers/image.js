@@ -17,23 +17,23 @@ class ImagesHandlers {
   //   ctx.body = await Image.getImageDetialByUrlName(ctx.query.urlname)
   // }
 
-  static async updateImageDetial(ctx) {
-    try {
-      await Image.updateImageDetial(ctx.request.body.params);
-      ctx.body={result:'success'}
-    } catch (error) {
-      ctx.body={result:'error',message:error}
-    }
-  }
+  // static async updateImageDetial(ctx) {
+  //   try {
+  //     await Image.updateImageDetial(ctx.request.body.params);
+  //     ctx.body={result:'success'}
+  //   } catch (error) {
+  //     ctx.body={result:'error',message:error}
+  //   }
+  // }
 
-  static async updateImageDetial(ctx) {
-    try {
-      await Image.updateImageDetial(ctx.request.body.params);
-      ctx.body={result:'success'}
-    } catch (error) {
-      ctx.body={result:'error',message:error}
-    }
-  }
+  // static async updateImageDetial(ctx) {
+  //   try {
+  //     await Image.updateImageDetial(ctx.request.body.params);
+  //     ctx.body={result:'success'}
+  //   } catch (error) {
+  //     ctx.body={result:'error',message:error}
+  //   }
+  // }
 
   static async newImage(ctx) {
     const data = ctx.request.body;

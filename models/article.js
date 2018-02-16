@@ -43,6 +43,7 @@ class Article {
             sub_title: item.sub_title,
             page_view: item.visit,
             has_cover: item.has_cover,
+            cover_url: item.cover_url ? item.cover_url : '',
             publish_time: Article.timeCast(item.create_time),
             is_recommended: item.is_recommended,
             usefor: item.usefor,
@@ -88,6 +89,7 @@ class Article {
           sub_title: item.sub_title,
           page_view: item.visit,
           has_cover: item.has_cover,
+          cover_url: item.cover_url ? item.cover_url : '',
           publish_time: Article.timeCast(item.create_time),
           is_recommended: item.is_recommended,
           usefor: item.usefor,
@@ -129,6 +131,7 @@ class Article {
         sub_title: article.sub_title,
         page_view: article.visit,
         has_cover: article.has_cover,
+        cover_url: article.cover_url ? article.cover_url:'',
         publish_time: Article.timeCast(article.create_time),
         content: article.content,
         is_recommended: article.is_recommended,
@@ -159,6 +162,7 @@ class Article {
         sub_title: article.sub_title,
         page_view: article.visit,
         has_cover: article.has_cover,
+        cover_url: article.cover_url ? article.cover_url : '',
         publish_time: Article.timeCast(article.create_time),
         content: article.content,
         is_recommended: article.is_recommended,
@@ -223,7 +227,7 @@ class Article {
       UPDATE article 
       SET content=:content ,u_name=:urlname ,usefor=:usefor ,is_active=:is_active,
       title=:title, sub_title=:sub_title, visit=:visit, has_cover=:has_cover,
-      create_time=:create_time, is_recommended=:is_recommended
+      create_time=:create_time, is_recommended=:is_recommended, cover_url=:cover_url
       WHERE u_name=:urlname
       `
     await global.db.query(sql, newArticleDetail)
