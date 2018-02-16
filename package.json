@@ -6,12 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --inspect index.js dev",
+    "dev-static": "npx http-server ./static -p 2999",
     "prod": "node index.js "
   },
   "author": "mk",
   "license": "ISC",
   "dependencies": {
     "chalk": "^1.1.3",
+    "http-server": "^0.11.1",
     "koa": "^2.3.0",
     "koa-body": "^2.1.0",
     "koa-bodyparser": "^4.2.0",

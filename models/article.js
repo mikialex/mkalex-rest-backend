@@ -174,15 +174,6 @@ class Article {
     return list
   }
 
-  static async addTag(urlname, tagname) {
-    await global.db.query('insert into article_with_tag (article,tag) values (:urlname,:tagname)', { urlname, tagname });
-  }
-
-  static async removeTag(urlname, tagname) {
-    await global.db.query('delete From article_with_tag Where article = :urlname and tag=:tagname', { urlname, tagname });
-  }
-
-
 
   static async addVisit(urlname) {
     let oldvisit = await global.db.q('Select visit From article Where u_name = :urlname', { urlname })

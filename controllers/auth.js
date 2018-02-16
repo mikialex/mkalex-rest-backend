@@ -52,6 +52,16 @@ class Auth {
       }
     } 
   }
+
+  static async authFilter(ctx, next) {
+    if (await Auth.CheckToken(ctx)) {
+      console.log('token check passed')
+      await next();
+    } else {
+      console.log('token check failed')
+      ctx.body = { result: 'authfail' }
+    }
+  }
    
 
 

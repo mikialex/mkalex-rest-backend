@@ -1,12 +1,8 @@
 const Image = require('../models/image.js');
 const Auth = require('./auth.js');
-const { promisify } = require('util');
-const fs = require('fs');
 
 var multer = require('multer')
 var upload = multer({ dest: 'uploads/' })
-
-const writeFile = promisify(fs.writeFile);
 
 
 class ImagesHandlers {
@@ -41,24 +37,24 @@ class ImagesHandlers {
 
   static async newImage(ctx) {
     const data = ctx.request.body;
-    if ( await Image.isExistSameUrlname(data.urlname)) {
-      ctx.body={result:'error',message:'urlname already exist'}
-    } else {
-        await Image.addImage(data);
-        ctx.body={result:'success'}
+    console.log(ctx.req.file);
+    console.log('data', data);
+    const storeInfo = ctx.req.file;
+    const imageInfo = {
+      storage_name:storeInfo.filename,
+      name: storeInfo.filename.substring(13),
+      upload_time: storeInfo.filename.substring(0,13),
     }
+    await Image.addImage(imageInfo);
+    const image = imageInfo.storage_name;
+    ctx.body = { result: 'success', imageUrl: image };
   }
 
   static async deleteImage(ctx) {
-    const urlname = ctx.query.urlname;
-    console.log(urlname);
-
-    if ( await Image.isExistSameUrlname(urlname)) {
-      await Image.deleteImage(urlname);
-      ctx.body = { result: 'success' };
-    } else {
-      ctx.body={result:'error',message:'delete failed'}
-    }
+    const imagePathName = ctx.query.imagePathName;
+    console.log(imagePathName);
+    await Image.deleteImage({ imagePathName});
+    ctx.body = { result: 'success' };
 
   }
 
