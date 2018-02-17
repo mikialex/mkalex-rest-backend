@@ -1,12 +1,15 @@
 
 const Router = require('koa-router');
 const multer = require('koa-multer');
+const md5 = require("blueimp-md5");
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'static/image/')
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
+    const name = Date.now()+ file.originalname;
+
+    cb(null, md5(name) + '-'  + name);
   }
 })
 

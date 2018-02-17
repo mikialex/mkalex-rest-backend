@@ -42,8 +42,8 @@ class ImagesHandlers {
     const storeInfo = ctx.req.file;
     const imageInfo = {
       storage_name:storeInfo.filename,
-      name: storeInfo.filename.substring(13),
-      upload_time: storeInfo.filename.substring(0,13),
+      name: storeInfo.filename.substring(34+12),
+      upload_time: storeInfo.filename.substring(33,34+12),
     }
     await Image.addImage(imageInfo);
     const image = imageInfo.storage_name;
