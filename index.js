@@ -18,9 +18,6 @@ if (arguments[0] === 'dev') {
    console.log(chalk.bgBlue('use online database \n'))
 }
 
-
-
-
 console.log(chalk.bgBlue('starting mkalex-rest backend \n'))
 debug.logblue('------database info loaded-----')
 debug.logblue('database name :' + databaseInfo.database)
@@ -102,9 +99,6 @@ app.use(imageRouter.routes())
   .use(imageRouter.allowedMethods());
 
 //------------------------------------------------------------------
-
-
-
 
 //start listen to port
 if (!module.parent) {

@@ -3,7 +3,6 @@ const Auth = require('./auth.js');
 
 class ArticlesHandlers {
 
-
   static async getArticleList(ctx) {
     ctx.body = await Article.getArticleList();
   }
@@ -20,7 +19,6 @@ class ArticlesHandlers {
 
     ctx.body = article;
   }
-
 
   static async getArticleDetailAdmin(ctx) {
     let article = await Article.getArticleContentByUrlnameAdmin(ctx.query.urlname)
@@ -50,7 +48,6 @@ class ArticlesHandlers {
     await Article.removeTag(ctx.query.urlname,ctx.query.tagname)
     ctx.body={result:'success'}
   }
-
 
   static async updateArticleDetail(ctx) {
     try {
@@ -83,7 +80,6 @@ class ArticlesHandlers {
     }
 
   }
-
 
 }
 

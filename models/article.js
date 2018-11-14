@@ -102,7 +102,6 @@ class Article {
     return articles;
   }
 
-
   static async getArticleContentByUrlname(urlname) {
     const articles = await global.db.q('Select content From article Where u_name = :urlname', {
       urlname
@@ -131,7 +130,7 @@ class Article {
         sub_title: article.sub_title,
         page_view: article.visit,
         has_cover: article.has_cover,
-        cover_url: article.cover_url ? article.cover_url:'',
+        cover_url: article.cover_url ? article.cover_url : '',
         publish_time: Article.timeCast(article.create_time),
         content: article.content,
         is_recommended: article.is_recommended,
@@ -177,7 +176,6 @@ class Article {
     let list = await global.db.q('Select tag From article_with_tag Where article = :urlname', { urlname })
     return list
   }
-
 
   static async addVisit(urlname) {
     let oldvisit = await global.db.q('Select visit From article Where u_name = :urlname', { urlname })

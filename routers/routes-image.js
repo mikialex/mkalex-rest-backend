@@ -1,4 +1,3 @@
-
 const Router = require('koa-router');
 const multer = require('koa-multer');
 const md5 = require("blueimp-md5");
@@ -24,8 +23,7 @@ const auth = require('../controllers/auth.js');
 
 
 ImageRouter.get('/', image.getImageList);
-ImageRouter.post('/image', auth.authFilter, upload.single('image'),image.newImage);
-// ImageRouter.patch('/image', auth.authFilter, image.updateImage);
+ImageRouter.post('/image', auth.authFilter, upload.single('image'), image.newImage);
 ImageRouter.delete('/image', auth.authFilter, image.deleteImage);
 
 module.exports = ImageRouter

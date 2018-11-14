@@ -6,7 +6,6 @@ class TagHandler{
     ctx.body = await Tag.getTagList();
   }
 
-
   static async updateTag(ctx) {
     ctx.body = await Tag.getArticleRelateTag();
   }  
@@ -22,7 +21,5 @@ class TagHandler{
   }  
 
 }
-
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
 module.exports = TagHandler;

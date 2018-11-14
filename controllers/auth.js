@@ -23,15 +23,6 @@ class Auth {
 
   static async CheckToken(ctx) {
     let token='';
-    // if (ctx.method === 'POST') {
-    //   token = ctx.request.body.token;
-    // } else if (ctx.method === 'DELETE') {
-    //   token = ctx.query.token;
-    // } else if (ctx.method === 'PATCH') {
-    //   token = ctx.request.body.params.token
-    // } else {
-    //   token = ctx.query.token;
-    // }
     token = ctx.query.token;
     console.log(token)
     if (token) {
@@ -39,18 +30,6 @@ class Auth {
     } else {
       return false
     }
-  }
-
-  static tokenChecker(handler) {
-    return async function (ctx) {
-      if (await Auth.CheckToken(ctx)) {
-        console.log('token check passed')
-        await handler(ctx)
-      } else {
-        console.log('token check failed')
-        ctx.body={result:'authfail'} 
-      }
-    } 
   }
 
   static async authFilter(ctx, next) {
@@ -63,8 +42,6 @@ class Auth {
     }
   }
    
-
-
 }
 
 module.exports = Auth;
