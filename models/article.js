@@ -1,5 +1,3 @@
-const cast = require('../utils/cast.js');
-
 class Article {
 
   static timeCast(time) {
@@ -9,9 +7,9 @@ class Article {
   static async getArticleList() {
     let sql =
       `SELECT *
-      FROM article left join article_with_tag
-      on article.u_name =article_with_tag.article
-      Order By create_time Desc`;
+      FROM article LEFT JOIN article_with_tag
+      ON article.u_name =article_with_tag.article
+      ORDER BY create_time Desc`;
 
     const rawResult = await global.db.q(sql);
 
@@ -58,9 +56,9 @@ class Article {
   static async getArticleListAdmin() {
     let sql =
       `SELECT *
-    FROM article left join article_with_tag
-    on article.u_name =article_with_tag.article
-    Order By create_time Desc`;
+    FROM article LEFT JOIN article_with_tag
+    ON article.u_name =article_with_tag.article
+    ORDER BY create_time Desc`;
 
     const rawResult = await global.db.q(sql);
 
@@ -103,7 +101,7 @@ class Article {
   }
 
   static async getArticleContentByUrlname(urlname) {
-    const articles = await global.db.q('Select content From article Where u_name = :urlname', {
+    const articles = await global.db.q('SELECT content FROM article WHERE u_name = :urlname', {
       urlname
     });
     return articles[0];
@@ -111,9 +109,9 @@ class Article {
 
   static async getArticleDetailByUrlName(urlname) {
     let sql =
-      `SELECT * FROM article left join article_with_tag
-    on article.u_name =article_with_tag.article
-    where article.u_name=:urlname`;
+      `SELECT * FROM article LEFT JOIN article_with_tag
+    ON article.u_name = article_with_tag.article
+    WHERE article.u_name=:urlname`;
 
     const articles = await global.db.q(sql, { urlname });
     let tags = [];
@@ -142,9 +140,9 @@ class Article {
 
   static async getArticleContentByUrlnameAdmin(urlname) {
     let sql =
-      `SELECT * FROM article left join article_with_tag
-  on article.u_name =article_with_tag.article
-  where article.u_name=:urlname`;
+      `SELECT * FROM article LEFT JOIN article_with_tag
+  ON article.u_name = article_with_tag.article
+  WHERE article.u_name=:urlname`;
 
     const articles = await global.db.q(sql, { urlname });
     let tags = [];
@@ -173,21 +171,19 @@ class Article {
   }
 
   static async getAricleTagList(urlname) {
-    let list = await global.db.q('Select tag From article_with_tag Where article = :urlname', { urlname })
+    let list = await global.db.q('SELECT tag FROM article_with_tag WHERE article = :urlname', { urlname })
     return list
   }
 
   static async addVisit(urlname) {
-    let oldvisit = await global.db.q('Select visit From article Where u_name = :urlname', { urlname })
-    console.log(oldvisit)    //to fix
+    let oldvisit = await global.db.q('SELECT visit FROM article WHERE u_name = :urlname', { urlname })
     let newvisit = oldvisit[0].visit + 1;
-    await global.db.query('update article set visit = :newvisit where u_name=:urlname', { urlname, newvisit })
+    await global.db.query('update article set visit = :newvisit WHERE u_name=:urlname', { urlname, newvisit })
   }
 
   static async addTag(urlname, tag) {
-    let tagExist = await global.db.q('Select article From article_with_tag Where tag = :tag and article=:urlname', { urlname, tag })
+    let tagExist = await global.db.q('SELECT article FROM article_with_tag WHERE tag = :tag and article=:urlname', { urlname, tag })
 
-    console.log(tagExist)    //to fix
     if (tagExist.length === 0) {
       let sql =
         `
@@ -202,12 +198,11 @@ class Article {
   }
 
   static async removeTag(urlname, tag) {
-    await global.db.query('delete from article_with_tag where article=:urlname and tag=:tag', { urlname, tag })
+    await global.db.query('DELETE FROM article_with_tag WHERE article=:urlname and tag=:tag', { urlname, tag })
   }
 
 
   static async addArticle(newArticleDetail) {
-    console.log(newArticleDetail)
     let sql =
       `
       INSERT INTO article 
@@ -219,7 +214,6 @@ class Article {
   }
 
   static async updateArticleDetail(newArticleDetail) {
-    // console.log(newArticleDetail)
     let sql =
       `
       UPDATE article 
@@ -234,7 +228,7 @@ class Article {
   static async isExistSameUrlname(urlname) {
     let sql =
       `
-    select u_name from article where u_name=:urlname
+    SELECT u_name FROM article WHERE u_name=:urlname
     `
     let ret = await global.db.q(sql, { urlname })
     if (ret.length !== 0) {
@@ -247,7 +241,7 @@ class Article {
   static async deleteArticle(urlname) {
     let sql =
       `
-      delete from article where u_name=:urlname
+      DELETE FROM article WHERE u_name=:urlname
       `
     let ret = await global.db.query(sql, { urlname })
   }

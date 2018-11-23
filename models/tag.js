@@ -5,10 +5,6 @@ class Tag{
     return await global.db.q('Select * From tag');
   }
 
-  static async updateTag(newTagName, oldTagName) {
-    return await global.db.query('Select * From tag');
-  }
-
   static async deleteTag(name) {
     await global.db.query('delete from tag where tag_name= :name',{name});
   }

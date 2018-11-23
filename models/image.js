@@ -24,7 +24,6 @@ class Image {
   }
 
   static async addImage(imageInfo) {
-    console.log('imageInfo', imageInfo);
     const imageBase = path.resolve(__dirname, '../static/image/') + '/';
     const imagePath = imageBase + imageInfo.storage_name;
     let realImageName = imageInfo.storage_name.split('.')[0];
@@ -46,7 +45,6 @@ class Image {
   }
 
   static async deleteImage(conf) {
-    console.log(conf);
     let sql =
       `
       delete from image where storage_name=:imagePathName

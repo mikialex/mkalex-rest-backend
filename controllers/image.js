@@ -12,8 +12,6 @@ class ImagesHandlers {
 
   static async newImage(ctx) {
     const data = ctx.request.body;
-    console.log(ctx.req.file);
-    console.log('data', data);
     const storeInfo = ctx.req.file;
     const imageInfo = {
       storage_name: storeInfo.filename,
@@ -27,7 +25,6 @@ class ImagesHandlers {
 
   static async deleteImage(ctx) {
     const imagePathName = ctx.query.imagePathName;
-    console.log(imagePathName);
     await Image.deleteImage({ imagePathName });
     ctx.body = { result: 'success' };
 

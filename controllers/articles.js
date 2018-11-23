@@ -70,8 +70,6 @@ class ArticlesHandlers {
 
   static async deleteArticle(ctx) {
     const urlname = ctx.query.urlname;
-    console.log(urlname);
-
     if ( await Article.isExistSameUrlname(urlname)) {
       await Article.deleteArticle(urlname);
       ctx.body = { result: 'success' };
