@@ -1,3 +1,8 @@
+const ARTICLE_DB_META = {
+  tableName: 'article',
+
+}
+
 class Article {
 
   static timeCast(time) {
@@ -6,8 +11,8 @@ class Article {
 
   static async getArticleList() {
     let sql =
-      `SELECT *
-      FROM article LEFT JOIN article_with_tag
+      `SELECT * FROM ${ARTICLE_DB_META.tableName} 
+      LEFT JOIN article_with_tag
       ON article.u_name =article_with_tag.article
       ORDER BY create_time Desc`;
 
@@ -55,8 +60,8 @@ class Article {
 
   static async getArticleListAdmin() {
     let sql =
-      `SELECT *
-    FROM article LEFT JOIN article_with_tag
+      `SELECT * FROM ${ARTICLE_DB_META.tableName} 
+     LEFT JOIN article_with_tag
     ON article.u_name =article_with_tag.article
     ORDER BY create_time Desc`;
 
@@ -101,15 +106,18 @@ class Article {
   }
 
   static async getArticleContentByUrlname(urlname) {
-    const articles = await global.db.q('SELECT content FROM article WHERE u_name = :urlname', {
-      urlname
-    });
+    const sql = `
+    SELECT content FROM ${ARTICLE_DB_META.tableName} 
+    WHERE u_name = :urlname
+    `
+    const articles = await global.db.q(sql, { urlname });
     return articles[0];
   }
 
   static async getArticleDetailByUrlName(urlname) {
     let sql =
-      `SELECT * FROM article LEFT JOIN article_with_tag
+      `SELECT * FROM ${ARTICLE_DB_META.tableName}  
+      LEFT JOIN article_with_tag
     ON article.u_name = article_with_tag.article
     WHERE article.u_name=:urlname`;
 
@@ -140,9 +148,10 @@ class Article {
 
   static async getArticleContentByUrlnameAdmin(urlname) {
     let sql =
-      `SELECT * FROM article LEFT JOIN article_with_tag
-  ON article.u_name = article_with_tag.article
-  WHERE article.u_name=:urlname`;
+      `SELECT * FROM ${ARTICLE_DB_META.tableName} 
+       LEFT JOIN article_with_tag
+       ON article.u_name = article_with_tag.article
+       WHERE article.u_name=:urlname`;
 
     const articles = await global.db.q(sql, { urlname });
     let tags = [];
@@ -171,14 +180,17 @@ class Article {
   }
 
   static async getAricleTagList(urlname) {
-    let list = await global.db.q('SELECT tag FROM article_with_tag WHERE article = :urlname', { urlname })
+    const sql = `
+    SELECT tag FROM article_with_tag WHERE article = :urlname
+    `
+    let list = await global.db.q(sql, { urlname })
     return list
   }
 
   static async addVisit(urlname) {
-    let oldvisit = await global.db.q('SELECT visit FROM article WHERE u_name = :urlname', { urlname })
+    let oldvisit = await global.db.q(`SELECT visit FROM ${ARTICLE_DB_META.tableName} WHERE u_name = :urlname`, { urlname })
     let newvisit = oldvisit[0].visit + 1;
-    await global.db.query('update article set visit = :newvisit WHERE u_name=:urlname', { urlname, newvisit })
+    await global.db.query(`UPDATE ${ARTICLE_DB_META.tableName} SET visit = :newvisit WHERE u_name=:urlname`, { urlname, newvisit })
   }
 
   static async addTag(urlname, tag) {

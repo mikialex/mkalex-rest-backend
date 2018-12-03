@@ -2,15 +2,15 @@
 class Tag{
 
   static async getTagList() {
-    return await global.db.q('Select * From tag');
+    return await global.db.q('SELECT * FROM tag');
   }
 
   static async deleteTag(name) {
-    await global.db.query('delete from tag where tag_name= :name',{name});
+    await global.db.query('DELETE FROM tag WHERE tag_name= :name',{name});
   }
 
   static async newTag(newTagName) {
-     await global.db.query('insert into tag (tag_name) values (:newTagName)',{newTagName});
+     await global.db.query('INSERT INTO tag (tag_name) VALUES (:newTagName)',{newTagName});
   }
   
 }

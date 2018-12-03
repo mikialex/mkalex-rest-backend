@@ -1,5 +1,5 @@
 const ALBUM_DB_META = {
-  tableName: album,
+  tableName: 'album',
 
 }
 

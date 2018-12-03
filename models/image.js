@@ -1,13 +1,16 @@
-const cast = require('../utils/cast.js');
 
 const fs = require('fs');
 const { promisify } = require('util');
-const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 const deleteFile = promisify(fs.unlink);
 
 const path = require('path');
 const sharp = require('sharp');
+
+const IMAGE_DB_META = {
+  tableName: 'image',
+
+}
 
 class Image {
 
@@ -17,13 +20,16 @@ class Image {
 
   static async getImageList() {
     let sql =
-      `SELECT * FROM image Order By upload_time Desc`;
+      `SELECT * FROM ${IMAGE_DB_META.tableName}
+       Order By upload_time Desc`;
     const rawResult = await global.db.q(sql);
     let images = rawResult;
     return images;
   }
 
   static async addImage(imageInfo) {
+
+    // get image detail info and wirite record to DB
     const imageBase = path.resolve(__dirname, '../static/image/') + '/';
     const imagePath = imageBase + imageInfo.storage_name;
     let realImageName = imageInfo.storage_name.split('.')[0];
@@ -31,12 +37,16 @@ class Image {
     const imageMetaData = await sharp(imageBuffer).metadata();
     let sql =
       `
-      INSERT INTO image (storage_name, name,upload_time,width,height) 
-      VALUES (:storage_name, :name, :upload_time,:width,:height);
+      INSERT INTO ${IMAGE_DB_META.tableName}
+       (storage_name, name,upload_time,width,height) 
+      VALUES
+       (:storage_name, :name, :upload_time,:width,:height);
       `
     imageInfo.width = imageMetaData.width;
     imageInfo.height = imageMetaData.height;
     await global.db.query(sql, imageInfo);
+  
+    // store thumnail picture
     await sharp(imageBuffer)
       .resize(200, 200)
       .max()
@@ -47,7 +57,8 @@ class Image {
   static async deleteImage(conf) {
     let sql =
       `
-      delete from image where storage_name=:imagePathName
+      DELETE FROM ${IMAGE_DB_META.tableName}
+       WHERE storage_name=:imagePathName
       `
     let ret = await global.db.query(sql, conf)
     const basePath = path.resolve(__dirname, '../static/image/') + '/';

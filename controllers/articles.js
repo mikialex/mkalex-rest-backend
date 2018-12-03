@@ -1,5 +1,9 @@
 const Article = require('../models/article.js');
-const Auth = require('./auth.js');
+
+function respondSuccess(ctx) {
+  ctx.body = { result: 'success' };
+  return ctx;
+}
 
 class ArticlesHandlers {
 
@@ -41,18 +45,18 @@ class ArticlesHandlers {
 
   static async addTag(ctx) {
     await Article.addTag(ctx.request.body.urlname, ctx.request.body.tagname)
-    ctx.body={result:'success'}
+    respondSuccess(ctx);
   }
 
   static async removeTag(ctx) {
     await Article.removeTag(ctx.query.urlname,ctx.query.tagname)
-    ctx.body={result:'success'}
+    respondSuccess(ctx);
   }
 
   static async updateArticleDetail(ctx) {
     try {
       await Article.updateArticleDetail(ctx.request.body);
-      ctx.body={result:'success'}
+      respondSuccess(ctx);
     } catch (error) {
       ctx.body={result:'error',message:error}
     }
@@ -64,7 +68,7 @@ class ArticlesHandlers {
       ctx.body={result:'error',message:'urlname already exist'}
     } else {
         await Article.addArticle(data);
-        ctx.body={result:'success'}
+        respondSuccess(ctx);
     }
   }
 
@@ -72,7 +76,7 @@ class ArticlesHandlers {
     const urlname = ctx.query.urlname;
     if ( await Article.isExistSameUrlname(urlname)) {
       await Article.deleteArticle(urlname);
-      ctx.body = { result: 'success' };
+      respondSuccess(ctx);
     } else {
       ctx.body={result:'error',message:'delete failed'}
     }

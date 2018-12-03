@@ -6,8 +6,8 @@ class AlbumsHandlers {
     ctx.body = await Album.getAlbumList();
   }
 
-  static async getArticleListAdmin(ctx) {
-    ctx.body = await Article.getAlbumListAdmin();
+  static async getAlbumListAdmin(ctx) {
+    ctx.body = await Album.getAlbumListAdmin();
   }
 
   static async createAlbum(ctx) {

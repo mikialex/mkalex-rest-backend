@@ -1,8 +1,4 @@
 const Image = require('../models/image.js');
-const Auth = require('./auth.js');
-
-var multer = require('multer')
-var upload = multer({ dest: 'uploads/' })
 
 class ImagesHandlers {
 
@@ -11,7 +7,6 @@ class ImagesHandlers {
   }
 
   static async newImage(ctx) {
-    const data = ctx.request.body;
     const storeInfo = ctx.req.file;
     const imageInfo = {
       storage_name: storeInfo.filename,

@@ -7,11 +7,11 @@ const AlbumRouter = new Router({
 const albums = require('../controllers/album.js');
 const auth = require('../controllers/auth.js');
 
-albumRouter.get('/', albums.getalbumList);       // list albums
-albumRouter.get('/admin', auth.authFilter, albums.getalbumListAdmin);    // get album content
+albumRouter.get('/', albums.getAlbumList);                               // list public albums
+albumRouter.get('/admin', auth.authFilter, albums.getAlbumListAdmin);    // list public and private albums
 
-albumRouter.patch('/album', auth.authFilter, albums.updatealbumDetail);    // change album details
-albumRouter.post('/album', auth.authFilter, albums.addalbum);    // add album details
-albumRouter.delete('/album', auth.authFilter, albums.deletealbum);    // add album details
+albumRouter.patch('/album', auth.authFilter, albums.updateAlbumDetail);  // change the album details
+albumRouter.post('/album', auth.authFilter, albums.addAlbum);            // create a new album
+albumRouter.delete('/album', auth.authFilter, albums.deleteAlbum);       // delete an album 
 
 module.exports = AlbumRouter
